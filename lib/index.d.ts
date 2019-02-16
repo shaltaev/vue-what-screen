@@ -1,8 +1,6 @@
-import Vue from "vue";
+import { PluginObject } from "vue";
 export interface IVueWhatScreenOptions {
-    version: "0.0.0";
+    version: string;
 }
-declare class VueWhatScreen {
-    install(vueInstance: Vue, options: IVueWhatScreenOptions): void;
-}
-export default VueWhatScreen;
+declare const vueWhatScreen: PluginObject<IVueWhatScreenOptions>;
+export default vueWhatScreen;
