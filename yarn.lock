@@ -380,11 +380,6 @@ vue@^2.6.6:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.6.tgz#dde41e483c11c46a7bf523909f4f2f816ab60d25"
   integrity sha512-Y2DdOZD8sxApS+iUlwv1v8U1qN41kq6Kw45lM6nVZKhygeWA49q7VCCXkjXqeDBXgurrKWkYQ9cJeEJwAq0b9Q==
 
-what-screen@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/what-screen/-/what-screen-0.0.2.tgz#c1475c95361df6b2a5ca9c8c018f1e43249f5f7c"
-  integrity sha512-n8hIOxKfHuKzm18V2KF9uaYiU2L0iWph2e/X2NPya8/zAXoDaIBG16maH6fILfsCxh3dYtw4tTpVsEkksvWf6w==
-
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
