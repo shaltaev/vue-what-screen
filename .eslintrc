@@ -1,0 +1,12 @@
+{
+  "extends": ["eslint:recommended", "airbnb", "prettier"],
+  "rules": {
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["Vue"]
+      }
+    ]
+  }
+}
