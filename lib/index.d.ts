@@ -1,6 +1,9 @@
 import { PluginObject } from "vue";
-export interface IVueWhatScreenOptions {
+declare type voidFunction = () => void;
+export interface IScreen {
     version: string;
+    muf: voidFunction[];
+    setF: (f: voidFunction) => void;
 }
-declare const vueWhatScreen: PluginObject<IVueWhatScreenOptions>;
+declare const vueWhatScreen: PluginObject<{}>;
 export default vueWhatScreen;
