@@ -17,11 +17,26 @@ npm i vue-screen-what
 yarn add vue-screen-what
 ```
 
+### Features
+
+- [x] `v-if` на момент отрисовки
+- [ ] подписка на `window.addEventListener("resize", () => {})`
+
 ### Примеры
 
-```vue
+В общем виде на данный момент:
 
+<!-- prettier-ignore-start -->
+
+```vue
+<template>
+  <h3 v-if="$screen.init().isP().done()">Your orientation is Portrait</h3>
+</template>
 ```
+
+<!-- prettier-ignore-end -->
+
+Больше в директории **examples**
 
 ## Версионирование
 

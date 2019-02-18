@@ -1,5 +1,9 @@
 <template>
-  <div class="first">{{ msg }}</div>
+  <div class="first">
+    {{ msg }}
+    <h3 v-if="$screen.init().isL().done()">Your orientation is Landscape</h3>
+    <h3 v-if="$screen.init().isP().done()">Your orientation is Portrait</h3>
+  </div>
 </template>
 
 <script>
