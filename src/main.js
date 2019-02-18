@@ -1,7 +1,29 @@
 const vueWhatScreen = {
-  install: (Vue, options) => {
-    Vue.prototype.$screen = {}
-    console.log(options)
+  /* jslint browser: true */
+  /* global window */
+
+  install: Vue => {
+    const queryLandscape = "(orientation: landscape)"
+
+    const $screen = {
+      result: true,
+      init: () => {
+        $screen.result = true
+        return $screen
+      },
+      isL: () => {
+        $screen.result *= window.matchMedia(queryLandscape).matches
+        return $screen
+      },
+      isP: () => {
+        $screen.result *= !window.matchMedia(queryLandscape).matches
+        return $screen
+      },
+      done: () => $screen.result,
+      not: () => !$screen.result
+    }
+
+    Vue.prototype.$screen = $screen
   }
 }
 
