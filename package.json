@@ -1,6 +1,6 @@
 {
   "name": "vue-what-screen",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "src/main.js",
   "repository": "git@github.com:shaltaev/vue-what-screen.git",
   "author": "shaltaev <shaltaev.gleb@gmail.com>",
