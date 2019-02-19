@@ -7,13 +7,13 @@ The project is designed so that from any place of the application you can easily
 ### Install
 
 ```sh
-npm i vue-screen-what
+npm i vue-what-screen
 ```
 
 or
 
 ```sh
-yarn add vue-screen-what
+yarn add vue-what-screen
 ```
 
 ### Features
