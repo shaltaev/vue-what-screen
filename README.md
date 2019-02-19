@@ -1,17 +1,16 @@
 # Vue-what-screen
 
-Проект предназначен для того чтобы из любого места приложения можно было с легкостью выяснить **layout** приложения. И текущую ориентацию экрана _портретная_ или _ландшафтная_.
-И на основе этиго менять поведения компонентов виде простого `v-if`
+The project is designed so that from any place of the application you can easily find out: **layout** of app and curent screent orientation _Portrait_ or _Landscape_.
 
-## Использование
+## Usage
 
-### Установка
+### Install
 
 ```sh
 npm i vue-screen-what
 ```
 
-или
+or
 
 ```sh
 yarn add vue-screen-what
@@ -19,34 +18,74 @@ yarn add vue-screen-what
 
 ### Features
 
-- [x] `v-if` на момент отрисовки
-- [ ] подписка на `window.addEventListener("resize", () => {})`
+- [x] `v-if` on mounted hooks
+- [x] optimise `window.addEventListener("resize", () => {})`
+- [ ] deside: what to use `window.addEventListener` or `Media Query List Sucribtions`?
+- [ ] create an easy way to subscribe Vue-component to status updates
 
-### Примеры
-
-В общем виде на данный момент:
+### Example from init to done
 
 <!-- prettier-ignore-start -->
 
+In main:
+
+```js
+var vueScreen = require('vue-what-screen')
+
+Vue.use(vueScreen)
+```
+
+In vue component:
+
 ```vue
 <template>
-  <h3 v-if="$screen.init().isP().done()">Your orientation is Portrait</h3>
+  <h3 v-if="$screen.isP().done()">Your screen orientation is Portrait</h3>
 </template>
 ```
 
 <!-- prettier-ignore-end -->
 
-Больше в директории **examples**
+Look more in directory **/examples**
 
-## Версионирование
+## Docs
 
-Используется [SemVer](http://semver.org/) для управлеиями версиями.
-Раобта на данный момент в Алфа стадии.
+States:
 
-## Автор
+- `state.isL` (autoupdated on resize event) true if now your screen orientation is Lanscape
 
-- **Шалтаев Глеб** - первоночальный автор.
+Functions:
 
-## Лицензия
+- chain-like: `$screen.isH(">", 400).isL().done()`
 
-Этот проект лицензирован по лицензии MIT - подробности см. В файле [LICENSE](/LICENSE).
+  - `isL()` is orientation Landscape
+  - `isP()` is orientation Portrait
+  - `isW(sign, width)` is width(px)?
+
+    - sign: enum ( > , >= , < , <=, = )
+    - width: number
+    - if sign not in enum or width is not number result will be **false**
+
+  - `isH(sign, height)` is height(px)?
+
+    - sign: enum ( > , >= , < , <=, = )
+    - height: number
+    - if sign not in enum or height is not number result will be **false**
+
+  - finish: one of it **REQUIRED** in chain
+
+    - `done()` return chain request result
+    - `not()` return inverted result
+
+  - `init()` Deprecated. Now is unnessary.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [project tags](https://github.com/shaltaev/vue-what-screen/tags)
+
+## Author
+
+- **Shaltaev Gleb** - project founder.
+
+## Licence
+
+This project is licensed under the MIT license - see details in the file [LICENSE](/LICENSE).
