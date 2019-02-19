@@ -7,6 +7,7 @@
         "props": true,
         "ignorePropertyModificationsFor": ["Vue"]
       }
-    ]
+    ],
+    "prefer-destructuring": 0
   }
 }
