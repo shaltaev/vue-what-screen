@@ -1,10 +1,6 @@
 import { resolve as res } from "path"
 import babel from "rollup-plugin-babel"
 
-// import rollup from "rollup"
-// const path = require("path")
-// const rollup = require("rollup")
-
 const resolve = _path => res(__dirname, _path)
 
 module.exports = {
