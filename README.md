@@ -115,7 +115,7 @@ var options = {
       value: 1800 // if Portrait the same Landscape
     }
   ],
-  breakpointsLastName: "uH",
+  breakpointsLastName: "uH", // if not seted then name will be `u_${brackpoints[last].name}` like u_H
 
   /**
    * If you add next, then options.breakpoints and options.reakpointsLastName will be ignored
