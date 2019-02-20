@@ -60,12 +60,12 @@ Functions:
 
   - `isL()` is orientation Landscape
   - `isP()` is orientation Portrait
-  - `isScreen(screen)` is screen compare to bakpoint
+  - `isScreen(screen)` is screen compare to breakpoint
 
     - screen: string (one of breakpint name, like "xs" for Bootstrap preset)
     - if breakpoints not seted result will be **false**
 
-  - `isScreenAd(sign, screen)` is screen compare to bakpoint condition (Ad as advansed)
+  - `isScreenAd(sign, screen)` is screen compare to breakpoint condition (Ad as advansed)
 
     - sign: enum ( > , >= , < , <=, = )
     - screen: string (one of breakpint name, like "xs" for Bootstrap preset)
