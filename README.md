@@ -101,7 +101,7 @@ var vueScreen = require("vue-what-screen")
 var options = {
   breakpoints: [
     {
-      name: "S",
+      name: "S", // Name should be uniq
       // !IMPORANT You specify the upper limit in px, and this limit is in the range so (.., limit]
       // The lower limit is derived from the previous breakpoint or 0
       value: [600, 800] // first for Portrait, second for Landscape
