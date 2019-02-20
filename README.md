@@ -136,7 +136,7 @@ Vue.use(vueScreen, options)
 
 - [x] `v-if` on mounted hooks
 - [x] optimise `window.addEventListener("resize", () => {})`
-- [ ] deside: what to use `window.addEventListener` or `Media Query List Sucribtions`?
+- [ ] deside: what to use `window.addEventListener` or `Media Query List Subscriptions`?
 - [ ] create an easy way to subscribe Vue-component to status updates
 
 ## Versioning
