@@ -1,11 +1,12 @@
 {
   "name": "vue-what-screen",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "repository": "git@github.com:shaltaev/vue-what-screen.git",
   "author": "shaltaev <shaltaev.gleb@gmail.com>",
   "license": "MIT",
-  "main": "dist/vue-what-screen.js",
-  "browser": "dist/vue-what-screen.iife.js",
+  "main": "dist/vue-what-screen.umd.js",
+  "module": "dist/vue-what-screen.esm.js",
+  "unpkg": "dist/vue-what-screen.min.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "type-check": "tsc --noEmit",

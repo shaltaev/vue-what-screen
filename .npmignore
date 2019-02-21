@@ -1,5 +1,5 @@
 tsconfig.json
-src
+
 docs
 docs-gitbook
 .vscode
@@ -16,7 +16,6 @@ yarn*
 
 .eslint*
 tslint*
-tsconfig.json
 .babelrc
 .editorconfig
 rollup.config.js

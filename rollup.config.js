@@ -21,14 +21,23 @@ export default {
     babel({ extensions, include: ["src/**/*"] })
   ],
 
+  main: "dist/vue-what-screen.umd.js",
+  module: "dist/vue-what-screen.esm.js",
+  unpkg: "dist/vue-what-screen.min.js",
+
   output: [
     {
       // for rollup/webpack
       file: pkg.main,
+      format: "umd",
+      name
+    },
+    {
+      file: pkg.module,
       format: "esm"
     },
     {
-      file: pkg.browser,
+      file: pkg.unpkg,
       format: "iife",
       name,
 
