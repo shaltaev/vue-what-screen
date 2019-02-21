@@ -20,10 +20,14 @@ yarn add vue-what-screen
 
 ### Features
 
-- [x] Chain-style request
-- [x] Breakpoints
-- [x] Presets for Breakpoints
-- [ ] Code Generator for queries (soon)
+- IN 0.1
+  - [x] Chain-style request
+  - [x] Breakpoints
+  - [x] Presets for Breakpoints
+  - [x] TypeScript support (since 0.1.8)
+- IN 0.2
+  - [ ] Code Generator for queries (soon)
+  - [ ] easy subscription on $screen.state for Vue-component
 
 ### Example from init to done
 
@@ -39,7 +43,7 @@ Vue.use(vueScreen)
 
 In vue component:
 
-```vue
+```xml
 <template>
   <h3 v-if="$screen.isP().done()">Your screen orientation is Portrait</h3>
 </template>
