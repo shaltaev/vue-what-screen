@@ -4,4 +4,4 @@ node_modules
 TODOs.md
 .vscode
 docs/.vuepress/dist
-examples/**/build.js
+examples

@@ -1,7 +1,5 @@
 import validateBreakpoints from "./func/validateBreakpoints"
 
-import "./vue-what-screen.d.ts"
-
 import checkIsH from "./func/checkIsH"
 import checkIsW from "./func/checkIsW"
 

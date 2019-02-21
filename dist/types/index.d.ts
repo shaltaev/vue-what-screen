@@ -1,4 +1,3 @@
-import "./vue-what-screen";
 import { PluginObject } from "vue";
 import { Sign } from "./enums/sign";
 export interface IBreakpoint {

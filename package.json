@@ -1,11 +1,10 @@
 {
   "name": "vue-what-screen",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "repository": "git@github.com:shaltaev/vue-what-screen.git",
   "author": "shaltaev <shaltaev.gleb@gmail.com>",
   "license": "MIT",
-  "main": "dist/vue-what-screen.cjs.js",
-  "module": "dist/vue-what-screen.esm.js",
+  "main": "dist/vue-what-screen.esm.js",
   "browser": "dist/vue-what-screen.iife.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
@@ -38,7 +37,6 @@
     "express": "^4.16.4",
     "rollup": "^1.2.1",
     "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",
