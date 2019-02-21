@@ -19,18 +19,22 @@ export interface IOptions {
   breakpointsPreset?: string
 }
 
-export interface IScreen {
-  helpers: {
-    result: boolean
-    setStateIsL: () => void
-    breakpoints: {
-      isInitialised: boolean
-      arrNames: string[]
-      arrP: number[]
-      arrL: number[]
-    }
-    setStateScreen: () => void
+interface IHelpers {
+  result: boolean
+
+  breakpoints: {
+    isInitialized: boolean
+    arrNames: string[]
+    arrP: number[]
+    arrL: number[]
   }
+}
+
+interface IHelperFunctions {
+  setStateIsL: ($screen: IScreen) => void
+  setStateScreen: ($screen: IScreen, options: IOptions) => void
+}
+export interface IScreen {
   methods: {
     computeIsW: (sign: Sign, width: number) => boolean
     computeIsH: (sign: Sign, height: number) => boolean
@@ -50,61 +54,63 @@ export interface IScreen {
   not: () => boolean
 }
 
+const helpers: IHelpers = {
+  result: true,
+
+  breakpoints: {
+    isInitialized: false,
+    arrNames: [],
+    arrP: [],
+    arrL: []
+  }
+}
+
+const helperFunctions: IHelperFunctions = {
+  setStateIsL: $screen => {
+    $screen.state.isL = window.matchMedia("(orientation: landscape)").matches
+  },
+  setStateScreen: ($screen, options) => {
+    if (options && helpers.breakpoints.isInitialized) {
+      let end = false
+      let targetArr
+
+      if ($screen.state.isL === true) {
+        targetArr = helpers.breakpoints.arrL
+      } else {
+        targetArr = helpers.breakpoints.arrP
+      }
+
+      for (let cursor = 0; cursor < targetArr.length; cursor += 1) {
+        const width = targetArr[cursor]
+        const query = `(max-width: ${width + 1}px)`
+        if (window.matchMedia(query).matches) {
+          $screen.state.screen = helpers.breakpoints.arrNames[cursor]
+          end = true
+          break
+        }
+      }
+
+      if (!end) {
+        if (options.breakpointsLastName === undefined) {
+          $screen.state.screen = `u_${
+            helpers.breakpoints.arrNames[
+              helpers.breakpoints.arrNames.length - 1
+            ]
+          }`
+        } else {
+          $screen.state.screen =
+            helpers.breakpoints.arrNames[
+              helpers.breakpoints.arrNames.length - 1
+            ]
+        }
+      }
+    }
+  }
+}
+
 const vueWhatScreen: PluginObject<IOptions> = {
   install: (vue, options) => {
     const $screen: IScreen = {
-      helpers: {
-        result: true,
-        setStateIsL: () => {
-          $screen.state.isL = window.matchMedia(
-            "(orientation: landscape)"
-          ).matches
-        },
-        breakpoints: {
-          isInitialised: false,
-          arrNames: [],
-          arrP: [],
-          arrL: []
-        },
-        setStateScreen: () => {
-          if (options && $screen.helpers.breakpoints.isInitialised) {
-            let end = false
-            let targetArr
-
-            if ($screen.state.isL === true) {
-              targetArr = $screen.helpers.breakpoints.arrL
-            } else {
-              targetArr = $screen.helpers.breakpoints.arrP
-            }
-
-            for (let cursor = 0; cursor < targetArr.length; cursor += 1) {
-              const width = targetArr[cursor]
-              const query = `(max-width: ${width + 1}px)`
-              if (window.matchMedia(query).matches) {
-                $screen.state.screen =
-                  $screen.helpers.breakpoints.arrNames[cursor]
-                end = true
-                break
-              }
-            }
-
-            if (!end) {
-              if (options.breakpointsLastName === undefined) {
-                $screen.state.screen = `u_${
-                  $screen.helpers.breakpoints.arrNames[
-                    $screen.helpers.breakpoints.arrNames.length - 1
-                  ]
-                }`
-              } else {
-                $screen.state.screen =
-                  $screen.helpers.breakpoints.arrNames[
-                    $screen.helpers.breakpoints.arrNames.length - 1
-                  ]
-              }
-            }
-          }
-        }
-      },
       methods: {
         computeIsW: (sign, width) => {
           return checkIsW(sign, width)
@@ -118,127 +124,127 @@ const vueWhatScreen: PluginObject<IOptions> = {
         screen: undefined
       },
       init: () => {
-        console.log("Now `init()` is unnessary")
-        $screen.helpers.result = true
+        console.log("Now `init()` is unnecessary")
+        helpers.result = true
         return $screen
       },
       isW: (sign, width) => {
-        $screen.helpers.result =
-          $screen.helpers.result && $screen.methods.computeIsW(sign, width)
+        helpers.result =
+          helpers.result && $screen.methods.computeIsW(sign, width)
         return $screen
       },
       isH: (sign, height) => {
-        $screen.helpers.result =
-          $screen.helpers.result && $screen.methods.computeIsH(sign, height)
+        helpers.result =
+          helpers.result && $screen.methods.computeIsH(sign, height)
         return $screen
       },
       isL: () => {
-        $screen.helpers.result = $screen.helpers.result && !!$screen.state.isL
+        helpers.result = helpers.result && !!$screen.state.isL
         return $screen
       },
       isP: () => {
-        $screen.helpers.result = $screen.helpers.result && !$screen.state.isL
+        helpers.result = helpers.result && !$screen.state.isL
         return $screen
       },
       isScreen: screen => {
         if (
-          $screen.helpers.breakpoints.isInitialised &&
+          helpers.breakpoints.isInitialized &&
           $screen.state.screen === screen
         ) {
-          $screen.helpers.result = $screen.helpers.result && true
+          helpers.result = helpers.result && true
         } else {
-          $screen.helpers.result = false
+          helpers.result = false
         }
         return $screen
       },
       isScreenAd: (sign, screen) => {
         if (
-          $screen.helpers.breakpoints.isInitialised &&
+          helpers.breakpoints.isInitialized &&
           typeof $screen.state.screen === "string" &&
-          $screen.helpers.breakpoints.arrNames.includes(screen)
+          helpers.breakpoints.arrNames.includes(screen)
         ) {
-          const index = $screen.helpers.breakpoints.arrNames.indexOf(screen)
-          const indexCurrentScreen = $screen.helpers.breakpoints.arrNames.indexOf(
+          const index = helpers.breakpoints.arrNames.indexOf(screen)
+          const indexCurrentScreen = helpers.breakpoints.arrNames.indexOf(
             $screen.state.screen
           )
 
           switch (sign) {
             case ">":
               if (index > indexCurrentScreen) {
-                $screen.helpers.result = $screen.helpers.result && true
+                helpers.result = helpers.result && true
               } else {
-                $screen.helpers.result = false
+                helpers.result = false
               }
               break
             case ">=":
               if (index >= indexCurrentScreen) {
-                $screen.helpers.result = $screen.helpers.result && true
+                helpers.result = helpers.result && true
               } else {
-                $screen.helpers.result = false
+                helpers.result = false
               }
               break
             case "<":
               if (index < indexCurrentScreen) {
-                $screen.helpers.result = $screen.helpers.result && true
+                helpers.result = helpers.result && true
               } else {
-                $screen.helpers.result = false
+                helpers.result = false
               }
               break
             case "<=":
               if (index <= indexCurrentScreen) {
-                $screen.helpers.result = $screen.helpers.result && true
+                helpers.result = helpers.result && true
               } else {
-                $screen.helpers.result = false
+                helpers.result = false
               }
               break
             case "=":
               if (index === indexCurrentScreen) {
-                $screen.helpers.result = $screen.helpers.result && true
+                helpers.result = helpers.result && true
               } else {
-                $screen.helpers.result = false
+                helpers.result = false
               }
               break
             default:
               break
           }
         } else {
-          $screen.helpers.result = false
+          helpers.result = false
         }
         return $screen
       },
       done: () => {
-        const result = $screen.helpers.result
-        $screen.helpers.result = true
+        const result = helpers.result
+        helpers.result = true
         return result
       },
       not: () => {
-        const result = $screen.helpers.result
-        $screen.helpers.result = true
+        const result = helpers.result
+        helpers.result = true
         return !result
       }
     }
 
-    // Initialise breackpoints
+    // Initializing breakpoints
     if (options && options.breakpoints && !("breakpointsPreset" in options)) {
       if (
         validateBreakpoints(options.breakpoints, options.breakpointsLastName)
       ) {
         // eslint-disable-next-line array-callback-return
         options.breakpoints.map(item => {
-          $screen.helpers.breakpoints.arrNames.push(item.name)
+          helpers.breakpoints.arrNames.push(item.name)
           if (typeof item.value === "number") {
-            $screen.helpers.breakpoints.arrP.push(item.value)
-            $screen.helpers.breakpoints.arrL.push(item.value)
+            helpers.breakpoints.arrP.push(item.value)
+            helpers.breakpoints.arrL.push(item.value)
           } else {
-            $screen.helpers.breakpoints.arrP.push(item.value[0])
-            $screen.helpers.breakpoints.arrL.push(item.value[1])
+            helpers.breakpoints.arrP.push(item.value[0])
+            helpers.breakpoints.arrL.push(item.value[1])
           }
         })
         if (options.breakpointsLastName !== undefined) {
-          $screen.helpers.breakpoints.arrNames.push(options.breakpointsLastName)
+          helpers.breakpoints.arrNames.push(options.breakpointsLastName)
         }
-        $screen.helpers.breakpoints.isInitialised = true
-        $screen.helpers.setStateScreen()
+        helpers.breakpoints.isInitialized = true
+        helperFunctions.setStateScreen($screen, options)
       }
     } else if (options && options.breakpointsPreset) {
       if ("breakpoints" in options) {
@@ -251,36 +257,36 @@ const vueWhatScreen: PluginObject<IOptions> = {
       if (preset !== false) {
         // eslint-disable-next-line array-callback-return
         preset.breakpoints.map(item => {
-          $screen.helpers.breakpoints.arrNames.push(item.name)
+          helpers.breakpoints.arrNames.push(item.name)
           if (typeof item.value === "number") {
-            $screen.helpers.breakpoints.arrP.push(item.value)
-            $screen.helpers.breakpoints.arrL.push(item.value)
+            helpers.breakpoints.arrP.push(item.value)
+            helpers.breakpoints.arrL.push(item.value)
           } else {
-            $screen.helpers.breakpoints.arrP.push(item.value[0])
-            $screen.helpers.breakpoints.arrL.push(item.value[1])
+            helpers.breakpoints.arrP.push(item.value[0])
+            helpers.breakpoints.arrL.push(item.value[1])
           }
         })
 
-        $screen.helpers.breakpoints.arrNames.push(preset.breakpointsLastName)
+        helpers.breakpoints.arrNames.push(preset.breakpointsLastName)
 
-        $screen.helpers.breakpoints.isInitialised = true
-        $screen.helpers.setStateScreen()
+        helpers.breakpoints.isInitialized = true
+        helperFunctions.setStateScreen($screen, options)
       } else {
-        console.error("Initialising of BP :: Failed")
+        console.error("Initializing of BP :: Failed")
       }
     } else {
-      console.error("Initialising of BP :: Failed")
+      console.error("Initializing of BP :: Failed")
     }
 
-    $screen.helpers.setStateIsL() // Initialise orientation state
+    helperFunctions.setStateIsL($screen) // Initializing orientation state
 
     const listenResize = (listenerFunction: () => void): void =>
       window.addEventListener("resize", listenerFunction)
 
     listenResize(() => {
-      $screen.helpers.setStateIsL()
-      if ($screen.helpers.breakpoints.isInitialised) {
-        $screen.helpers.setStateScreen()
+      helperFunctions.setStateIsL($screen)
+      if (options && helpers.breakpoints.isInitialized) {
+        helperFunctions.setStateScreen($screen, options)
       }
     })
 

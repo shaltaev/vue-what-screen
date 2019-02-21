@@ -228,52 +228,54 @@
     }
   });
 
+  var helpers = {
+    result: true,
+    breakpoints: {
+      isInitialized: false,
+      arrNames: [],
+      arrP: [],
+      arrL: []
+    }
+  };
+  var helperFunctions = {
+    setStateIsL: function setStateIsL($screen) {
+      $screen.state.isL = window.matchMedia("(orientation: landscape)").matches;
+    },
+    setStateScreen: function setStateScreen($screen, options) {
+      if (options && helpers.breakpoints.isInitialized) {
+        var end = false;
+        var targetArr;
+
+        if ($screen.state.isL === true) {
+          targetArr = helpers.breakpoints.arrL;
+        } else {
+          targetArr = helpers.breakpoints.arrP;
+        }
+
+        for (var cursor = 0; cursor < targetArr.length; cursor += 1) {
+          var width = targetArr[cursor];
+          var query = "(max-width: ".concat(width + 1, "px)");
+
+          if (window.matchMedia(query).matches) {
+            $screen.state.screen = helpers.breakpoints.arrNames[cursor];
+            end = true;
+            break;
+          }
+        }
+
+        if (!end) {
+          if (options.breakpointsLastName === undefined) {
+            $screen.state.screen = "u_".concat(helpers.breakpoints.arrNames[helpers.breakpoints.arrNames.length - 1]);
+          } else {
+            $screen.state.screen = helpers.breakpoints.arrNames[helpers.breakpoints.arrNames.length - 1];
+          }
+        }
+      }
+    }
+  };
   var vueWhatScreen = {
     install: function install(vue, options) {
       var $screen = {
-        helpers: {
-          result: true,
-          setStateIsL: function setStateIsL() {
-            $screen.state.isL = window.matchMedia("(orientation: landscape)").matches;
-          },
-          breakpoints: {
-            isInitialised: false,
-            arrNames: [],
-            arrP: [],
-            arrL: []
-          },
-          setStateScreen: function setStateScreen() {
-            if (options && $screen.helpers.breakpoints.isInitialised) {
-              var end = false;
-              var targetArr;
-
-              if ($screen.state.isL === true) {
-                targetArr = $screen.helpers.breakpoints.arrL;
-              } else {
-                targetArr = $screen.helpers.breakpoints.arrP;
-              }
-
-              for (var cursor = 0; cursor < targetArr.length; cursor += 1) {
-                var width = targetArr[cursor];
-                var query = "(max-width: ".concat(width + 1, "px)");
-
-                if (window.matchMedia(query).matches) {
-                  $screen.state.screen = $screen.helpers.breakpoints.arrNames[cursor];
-                  end = true;
-                  break;
-                }
-              }
-
-              if (!end) {
-                if (options.breakpointsLastName === undefined) {
-                  $screen.state.screen = "u_".concat($screen.helpers.breakpoints.arrNames[$screen.helpers.breakpoints.arrNames.length - 1]);
-                } else {
-                  $screen.state.screen = $screen.helpers.breakpoints.arrNames[$screen.helpers.breakpoints.arrNames.length - 1];
-                }
-              }
-            }
-          }
-        },
         methods: {
           computeIsW: function computeIsW(sign, width) {
             return checkIsW(sign, width);
@@ -287,82 +289,82 @@
           screen: undefined
         },
         init: function init() {
-          console.log("Now `init()` is unnessary");
-          $screen.helpers.result = true;
+          console.log("Now `init()` is unnecessary");
+          helpers.result = true;
           return $screen;
         },
         isW: function isW(sign, width) {
-          $screen.helpers.result = $screen.helpers.result && $screen.methods.computeIsW(sign, width);
+          helpers.result = helpers.result && $screen.methods.computeIsW(sign, width);
           return $screen;
         },
         isH: function isH(sign, height) {
-          $screen.helpers.result = $screen.helpers.result && $screen.methods.computeIsH(sign, height);
+          helpers.result = helpers.result && $screen.methods.computeIsH(sign, height);
           return $screen;
         },
         isL: function isL() {
-          $screen.helpers.result = $screen.helpers.result && !!$screen.state.isL;
+          helpers.result = helpers.result && !!$screen.state.isL;
           return $screen;
         },
         isP: function isP() {
-          $screen.helpers.result = $screen.helpers.result && !$screen.state.isL;
+          helpers.result = helpers.result && !$screen.state.isL;
           return $screen;
         },
         isScreen: function isScreen(screen) {
-          if ($screen.helpers.breakpoints.isInitialised && $screen.state.screen === screen) {
-            $screen.helpers.result = $screen.helpers.result && true;
+          if (helpers.breakpoints.isInitialized && $screen.state.screen === screen) {
+            helpers.result = helpers.result && true;
           } else {
-            $screen.helpers.result = false;
+            helpers.result = false;
           }
 
           return $screen;
         },
         isScreenAd: function isScreenAd(sign, screen) {
-          if ($screen.helpers.breakpoints.isInitialised && typeof $screen.state.screen === "string" && $screen.helpers.breakpoints.arrNames.includes(screen)) {
-            var index = $screen.helpers.breakpoints.arrNames.indexOf(screen);
-            var indexCurrentScreen = $screen.helpers.breakpoints.arrNames.indexOf($screen.state.screen);
+          if (helpers.breakpoints.isInitialized && typeof $screen.state.screen === "string" && helpers.breakpoints.arrNames.includes(screen)) {
+            var index = helpers.breakpoints.arrNames.indexOf(screen);
+            var indexCurrentScreen = helpers.breakpoints.arrNames.indexOf($screen.state.screen);
 
             switch (sign) {
               case ">":
                 if (index > indexCurrentScreen) {
-                  $screen.helpers.result = $screen.helpers.result && true;
+                  helpers.result = helpers.result && true;
                 } else {
-                  $screen.helpers.result = false;
+                  helpers.result = false;
                 }
 
                 break;
 
               case ">=":
                 if (index >= indexCurrentScreen) {
-                  $screen.helpers.result = $screen.helpers.result && true;
+                  helpers.result = helpers.result && true;
                 } else {
-                  $screen.helpers.result = false;
+                  helpers.result = false;
                 }
 
                 break;
 
               case "<":
                 if (index < indexCurrentScreen) {
-                  $screen.helpers.result = $screen.helpers.result && true;
+                  helpers.result = helpers.result && true;
                 } else {
-                  $screen.helpers.result = false;
+                  helpers.result = false;
                 }
 
                 break;
 
               case "<=":
                 if (index <= indexCurrentScreen) {
-                  $screen.helpers.result = $screen.helpers.result && true;
+                  helpers.result = helpers.result && true;
                 } else {
-                  $screen.helpers.result = false;
+                  helpers.result = false;
                 }
 
                 break;
 
               case "=":
                 if (index === indexCurrentScreen) {
-                  $screen.helpers.result = $screen.helpers.result && true;
+                  helpers.result = helpers.result && true;
                 } else {
-                  $screen.helpers.result = false;
+                  helpers.result = false;
                 }
 
                 break;
@@ -371,21 +373,21 @@
                 break;
             }
           } else {
-            $screen.helpers.result = false;
+            helpers.result = false;
           }
 
           return $screen;
         },
         done: function done() {
-          var result = $screen.helpers.result;
-          $screen.helpers.result = true;
+          var result = helpers.result;
+          helpers.result = true;
           return result;
         },
         not: function not() {
-          var result = $screen.helpers.result;
-          $screen.helpers.result = true;
+          var result = helpers.result;
+          helpers.result = true;
           return !result;
-        } // Initialise breackpoints
+        } // Initializing breakpoints
 
       };
 
@@ -393,23 +395,23 @@
         if (validateBreakpoints(options.breakpoints, options.breakpointsLastName)) {
           // eslint-disable-next-line array-callback-return
           options.breakpoints.map(function (item) {
-            $screen.helpers.breakpoints.arrNames.push(item.name);
+            helpers.breakpoints.arrNames.push(item.name);
 
             if (typeof item.value === "number") {
-              $screen.helpers.breakpoints.arrP.push(item.value);
-              $screen.helpers.breakpoints.arrL.push(item.value);
+              helpers.breakpoints.arrP.push(item.value);
+              helpers.breakpoints.arrL.push(item.value);
             } else {
-              $screen.helpers.breakpoints.arrP.push(item.value[0]);
-              $screen.helpers.breakpoints.arrL.push(item.value[1]);
+              helpers.breakpoints.arrP.push(item.value[0]);
+              helpers.breakpoints.arrL.push(item.value[1]);
             }
           });
 
           if (options.breakpointsLastName !== undefined) {
-            $screen.helpers.breakpoints.arrNames.push(options.breakpointsLastName);
+            helpers.breakpoints.arrNames.push(options.breakpointsLastName);
           }
 
-          $screen.helpers.breakpoints.isInitialised = true;
-          $screen.helpers.setStateScreen();
+          helpers.breakpoints.isInitialized = true;
+          helperFunctions.setStateScreen($screen, options);
         }
       } else if (options && options.breakpointsPreset) {
         if ("breakpoints" in options) {
@@ -425,37 +427,37 @@
         if (preset !== false) {
           // eslint-disable-next-line array-callback-return
           preset.breakpoints.map(function (item) {
-            $screen.helpers.breakpoints.arrNames.push(item.name);
+            helpers.breakpoints.arrNames.push(item.name);
 
             if (typeof item.value === "number") {
-              $screen.helpers.breakpoints.arrP.push(item.value);
-              $screen.helpers.breakpoints.arrL.push(item.value);
+              helpers.breakpoints.arrP.push(item.value);
+              helpers.breakpoints.arrL.push(item.value);
             } else {
-              $screen.helpers.breakpoints.arrP.push(item.value[0]);
-              $screen.helpers.breakpoints.arrL.push(item.value[1]);
+              helpers.breakpoints.arrP.push(item.value[0]);
+              helpers.breakpoints.arrL.push(item.value[1]);
             }
           });
-          $screen.helpers.breakpoints.arrNames.push(preset.breakpointsLastName);
-          $screen.helpers.breakpoints.isInitialised = true;
-          $screen.helpers.setStateScreen();
+          helpers.breakpoints.arrNames.push(preset.breakpointsLastName);
+          helpers.breakpoints.isInitialized = true;
+          helperFunctions.setStateScreen($screen, options);
         } else {
-          console.error("Initialising of BP :: Failed");
+          console.error("Initializing of BP :: Failed");
         }
       } else {
-        console.error("Initialising of BP :: Failed");
+        console.error("Initializing of BP :: Failed");
       }
 
-      $screen.helpers.setStateIsL(); // Initialise orientation state
+      helperFunctions.setStateIsL($screen); // Initializing orientation state
 
       var listenResize = function listenResize(listenerFunction) {
         return window.addEventListener("resize", listenerFunction);
       };
 
       listenResize(function () {
-        $screen.helpers.setStateIsL();
+        helperFunctions.setStateIsL($screen);
 
-        if ($screen.helpers.breakpoints.isInitialised) {
-          $screen.helpers.setStateScreen();
+        if (options && helpers.breakpoints.isInitialized) {
+          helperFunctions.setStateScreen($screen, options);
         }
       });
       vue.prototype.$screen = $screen;
