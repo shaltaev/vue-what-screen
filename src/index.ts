@@ -1,5 +1,7 @@
 import validateBreakpoints from "./func/validateBreakpoints"
 
+import "./vue-what-screen.d.ts"
+
 import checkIsH from "./func/checkIsH"
 import checkIsW from "./func/checkIsW"
 
@@ -7,7 +9,7 @@ import breakpointsPreset from "./bp"
 
 import { PluginObject } from "vue"
 
-import { Sign } from "src/enums/sign"
+import { Sign } from "./enums/sign"
 
 export interface IBreakpoint {
   name: string

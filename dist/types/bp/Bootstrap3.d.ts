@@ -1,3 +1,3 @@
-import { IResBp } from "src/bp";
+import { IResBp } from ".";
 declare const BS3: IResBp;
 export default BS3;

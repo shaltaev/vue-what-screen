@@ -2,7 +2,7 @@
 import "babel-polyfill"
 import Vue from "vue"
 import App from "./components/App.vue"
-import vueWhatScreen from "../../dist/bundle.esm"
+import vueWhatScreen from "../../dist/vue-what-screen.esm"
 
 Vue.use(vueWhatScreen, {
   breakpoints: [

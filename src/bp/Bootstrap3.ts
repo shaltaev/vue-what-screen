@@ -1,4 +1,4 @@
-import { IResBp } from "src/bp"
+import { IResBp } from "."
 
 const BS3: IResBp = {
   breakpoints: [

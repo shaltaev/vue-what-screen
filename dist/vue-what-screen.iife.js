@@ -1,4 +1,4 @@
-var VueWhatScreen = (function () {
+var vueWhatScreen = (function () {
   'use strict';
 
   function _typeof(obj) {

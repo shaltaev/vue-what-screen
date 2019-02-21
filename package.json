@@ -4,9 +4,9 @@
   "repository": "git@github.com:shaltaev/vue-what-screen.git",
   "author": "shaltaev <shaltaev.gleb@gmail.com>",
   "license": "MIT",
-  "main": "dist/bundle.cjs.js",
-  "module": "dist/bundle.esm.js",
-  "browser": "dist/bundle.iife.js",
+  "main": "dist/vue-what-screen.cjs.js",
+  "module": "dist/vue-what-screen.esm.js",
+  "browser": "dist/vue-what-screen.iife.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "type-check": "tsc --noEmit",

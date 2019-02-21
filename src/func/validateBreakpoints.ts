@@ -1,4 +1,4 @@
-import { IBreakpoint } from "src/main"
+import { IBreakpoint } from "../index"
 
 export default (bp: IBreakpoint[], bpLastName?: string) => {
   const arrP = [] as number[]

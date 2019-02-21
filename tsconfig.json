@@ -43,7 +43,7 @@
 
     // TODO: Add webpack ( or only babel?) with [awesome-typescript-loader](https://www.npmjs.com/package/awesome-typescript-loader) and [tsconfig-paths-webpack-plugin](https://www.npmjs.com/package/tsconfig-paths-webpack-plugin)
     // "paths": {
-    //   "@/*": ["src/*"]
+    //   "~/*": ["src/*"]
     // } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
 
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
@@ -63,6 +63,6 @@
     // "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
-  "include": ["src/**/*", "lib/vue-what-screen.d.ts"],
+  "include": ["src/**/*", "src/vue-what-screen.d.ts"],
   "exclude": ["node_modules"]
 }

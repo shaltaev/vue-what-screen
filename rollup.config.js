@@ -5,10 +5,10 @@ import pkg from "./package.json"
 
 const extensions = [".ts"]
 
-const name = "VueWhatScreen"
+const name = "vueWhatScreen"
 
 export default {
-  input: "./src/main.ts",
+  input: "./src/index.ts",
 
   // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
   // https://rollupjs.org/guide/en#external-e-external

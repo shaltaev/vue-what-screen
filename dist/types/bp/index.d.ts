@@ -1,4 +1,4 @@
-import { IOptions, IBreakpoint } from "src/main";
+import { IOptions, IBreakpoint } from "../.";
 export interface IResBp extends IOptions {
     breakpoints: IBreakpoint[];
     breakpointsLastName: string;

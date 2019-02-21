@@ -2,7 +2,7 @@ import BS3 from "./Bootstrap3"
 import BS4 from "./Bootstrap4"
 import F6 from "./Foundation6"
 
-import { IOptions, IBreakpoint } from "src/main"
+import { IOptions, IBreakpoint } from "../."
 
 export interface IResBp extends IOptions {
   breakpoints: IBreakpoint[]
