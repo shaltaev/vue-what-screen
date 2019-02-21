@@ -1,37 +1,152 @@
 # Vue-what-screen
 
-Проект предназначен для того чтобы из любого места приложения можно было с легкостью выяснить **layout** приложения. И текущую ориентацию экрана _портретная_ или _ландшафтная_.
-И на основе этиго менять поведения компонентов виде простого `v-if`
+The project is designed so that from any place of the application you can easily find out: **layout** of app and curent screent orientation _Portrait_ or _Landscape_.
 
-## Использование
+## Usage
 
-### Установка
-
-```sh
-npm i vue-screen-what
-```
-
-или
+### Install
 
 ```sh
-yarn add vue-screen-what
+npm i vue-what-screen
 ```
 
-### Примеры
+or
+
+```sh
+yarn add vue-what-screen
+```
+
+### Features
+
+- [x] Chain-style request
+- [x] Breakpoints
+- [x] Presets for Breakpoints
+- [ ] Code Generator for queries (soon)
+
+### Example from init to done
+
+<!-- prettier-ignore-start -->
+
+In main:
+
+```js
+var vueScreen = require('vue-what-screen')
+
+Vue.use(vueScreen)
+```
+
+In vue component:
 
 ```vue
-
+<template>
+  <h3 v-if="$screen.isP().done()">Your screen orientation is Portrait</h3>
+</template>
 ```
 
-## Версионирование
+<!-- prettier-ignore-end -->
 
-Используется [SemVer](http://semver.org/) для управлеиями версиями.
-Раобта на данный момент в Алфа стадии.
+Look more in directory **/examples**
 
-## Автор
+## Docs
 
-- **Шалтаев Глеб** - первоночальный автор.
+States:
 
-## Лицензия
+- `state.isL` (autoupdated on resize event) true if now your screen orientation is Lanscape
+- `state.screen` (autoupdated on resize event) available if you set breakpoints or choose one of breakpoints preset
 
-Этот проект лицензирован по лицензии MIT - подробности см. В файле [LICENSE](/LICENSE).
+Functions:
+
+- chain-like: `$screen.isH(">", 400).isL().done()`
+
+  - `isL()` is orientation Landscape
+  - `isP()` is orientation Portrait
+  - `isScreen(screen)` is screen compare to breakpoint
+
+    - screen: string (one of breakpint name, like "xs" for Bootstrap preset)
+    - if breakpoints not seted result will be **false**
+
+  - `isScreenAd(sign, screen)` is screen compare to breakpoint condition (Ad as advansed)
+
+    - sign: enum ( > , >= , < , <=, = )
+    - screen: string (one of breakpint name, like "xs" for Bootstrap preset)
+    - if sign not in enum or breakpoints not seted result will be **false**
+    - ex: `isScreenAd('>', 'xs')` mean that screen should be more then `xs` from Bootstrap (only if you use Bootstrap preset)
+
+  - `isW(sign, width)` is width(px)?
+
+    - sign: enum ( > , >= , < , <=, = )
+    - width: number
+    - if sign not in enum or width is not number result will be **false**
+
+  - `isH(sign, height)` is height(px)?
+
+    - sign: enum ( > , >= , < , <=, = )
+    - height: number
+    - if sign not in enum or height is not number result will be **false**
+
+  - finish: one of it **REQUIRED** in chain
+
+    - `done()` return chain request result
+    - `not()` return inverted result
+
+  - `init()` Deprecated. Now is unnessary.
+
+BreakPoints:
+
+In main:
+
+```js
+var vueScreen = require("vue-what-screen")
+
+var options = {
+  breakpoints: [
+    {
+      name: "S", // Name should be uniq
+      // !IMPORANT You specify the upper limit in px, and this limit is in the range so (.., limit]
+      // The lower limit is derived from the previous breakpoint or 0
+      value: [600, 800] // first for Portrait, second for Landscape
+    },
+    {
+      name: "M",
+      value: [1200, 1280]
+    },
+    {
+      name: "H",
+      value: 1800 // if Portrait the same Landscape
+    }
+  ],
+  breakpointsLastName: "uH", // if not seted then name will be `u_${brackpoints[last].name}` like u_H
+
+  /**
+   * If you add next, then options.breakpoints and options.reakpointsLastName will be ignored
+   */
+  breakpointsPreset: "BS"
+}
+
+Vue.use(vueScreen, options)
+```
+
+| presets      | alias for always    | alias as for lastest pakage |
+| ------------ | ------------------- | --------------------------- |
+| Bootstrap 4  | "BS4", "Bootstrap4" | "BS", "Bootstrap"           |
+| Bootstrap 3  | "BS3", "Bootstrap3" |                             |
+| Foundation 6 | "F6", "Foundation6" | "F", "Foundation"           |
+
+## ToDo's
+
+- [x] `v-if` on mounted hooks
+- [x] optimise `window.addEventListener("resize", () => {})`
+- [ ] deside: what to use `window.addEventListener` or `Media Query List Subscriptions`?
+- [ ] create an easy way to subscribe Vue-component to status updates
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [project tags](https://github.com/shaltaev/vue-what-screen/tags)
+
+## Author
+
+- **Shaltaev Gleb** - project founder.
+
+## Licence
+
+This project is licensed under the MIT license - see details in the file [LICENSE](/LICENSE).
