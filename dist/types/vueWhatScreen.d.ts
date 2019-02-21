@@ -1,6 +1,6 @@
 import Vue from "vue"
 
-import { IScreen } from "../src"
+import { IScreen } from "./main"
 
 declare module "vue/types/vue" {
   interface VueConstructor {

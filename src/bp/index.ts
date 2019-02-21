@@ -2,7 +2,14 @@ import BS3 from "./Bootstrap3"
 import BS4 from "./Bootstrap4"
 import F6 from "./Foundation6"
 
-export default presetName => {
+import { IOptions, IBreakpoint } from "src/main"
+
+export interface IResBp extends IOptions {
+  breakpoints: IBreakpoint[]
+  breakpointsLastName: string
+}
+
+export default (presetName: string): IResBp | false => {
   switch (presetName) {
     case "Bootstrap3":
     case "BS3":

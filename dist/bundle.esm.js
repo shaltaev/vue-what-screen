@@ -12,26 +12,6 @@ function _typeof(obj) {
   return _typeof(obj);
 }
 
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-}
-
-function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
-}
-
 var validateBreakpoints = (function (bp, bpLastName) {
   var arrP = [];
   var arrL = [];
@@ -62,7 +42,7 @@ var validateBreakpoints = (function (bp, bpLastName) {
     // eslint-disable-next-line no-restricted-syntax
 
     for (var val in validateAndPush) {
-      if (validateAndPush[val] === false) {
+      if (!validateAndPush[val]) {
         return false;
       }
     } // Check that all names in arrNames is uniq
@@ -70,10 +50,12 @@ var validateBreakpoints = (function (bp, bpLastName) {
 
     if (bpLastName !== undefined && typeof bpLastName === "string") {
       arrNames.push(bpLastName);
-    }
+    } // const uniqNames = [...new Set(arrNames)]
 
-    var uniqNames = _toConsumableArray(new Set(arrNames));
 
+    var uniqNames = Array.from(new Set(arrNames.map(function (item) {
+      return item;
+    })));
     if (uniqNames.length !== arrNames.length) return false; // Check that arrP and arrL in ASC Order
 
     for (var i = 1; i < arrP.length; i += 1) {
@@ -93,9 +75,6 @@ var validateBreakpoints = (function (bp, bpLastName) {
 });
 
 var checkIsH = (function (sign, height) {
-  /* jslint browser: true */
-
-  /* global window */
   if (Number.isInteger(height)) {
     var query = "";
 
@@ -244,10 +223,7 @@ var breakpointsPreset = (function (presetName) {
 });
 
 var vueWhatScreen = {
-  /* jslint browser: true */
-
-  /* global window */
-  install: function install(Vue, options) {
+  install: function install(vue, options) {
     var $screen = {
       helpers: {
         result: true,
@@ -261,7 +237,7 @@ var vueWhatScreen = {
           arrL: []
         },
         setStateScreen: function setStateScreen() {
-          if ($screen.helpers.breakpoints.isInitialised) {
+          if (options && $screen.helpers.breakpoints.isInitialised) {
             var end = false;
             var targetArr;
 
@@ -310,24 +286,24 @@ var vueWhatScreen = {
         return $screen;
       },
       isW: function isW(sign, width) {
-        $screen.helpers.result *= $screen.methods.computeIsW(sign, width);
+        $screen.helpers.result = $screen.helpers.result && $screen.methods.computeIsW(sign, width);
         return $screen;
       },
       isH: function isH(sign, height) {
-        $screen.helpers.result *= $screen.methods.computeIsH(sign, height);
+        $screen.helpers.result = $screen.helpers.result && $screen.methods.computeIsH(sign, height);
         return $screen;
       },
       isL: function isL() {
-        $screen.helpers.result *= $screen.state.isL;
+        $screen.helpers.result = $screen.helpers.result && !!$screen.state.isL;
         return $screen;
       },
       isP: function isP() {
-        $screen.helpers.result *= !$screen.state.isL;
+        $screen.helpers.result = $screen.helpers.result && !$screen.state.isL;
         return $screen;
       },
       isScreen: function isScreen(screen) {
         if ($screen.helpers.breakpoints.isInitialised && $screen.state.screen === screen) {
-          $screen.helpers.result *= true;
+          $screen.helpers.result = $screen.helpers.result && true;
         } else {
           $screen.helpers.result = false;
         }
@@ -335,15 +311,14 @@ var vueWhatScreen = {
         return $screen;
       },
       isScreenAd: function isScreenAd(sign, screen) {
-        if ($screen.helpers.breakpoints.isInitialised && $screen.helpers.breakpoints.arrNames.includes(screen)) {
+        if ($screen.helpers.breakpoints.isInitialised && typeof $screen.state.screen === "string" && $screen.helpers.breakpoints.arrNames.includes(screen)) {
           var index = $screen.helpers.breakpoints.arrNames.indexOf(screen);
           var indexCurrentScreen = $screen.helpers.breakpoints.arrNames.indexOf($screen.state.screen);
-          console.log(index, indexCurrentScreen);
 
           switch (sign) {
             case ">":
               if (index > indexCurrentScreen) {
-                $screen.helpers.result *= true;
+                $screen.helpers.result = $screen.helpers.result && true;
               } else {
                 $screen.helpers.result = false;
               }
@@ -352,7 +327,7 @@ var vueWhatScreen = {
 
             case ">=":
               if (index >= indexCurrentScreen) {
-                $screen.helpers.result *= true;
+                $screen.helpers.result = $screen.helpers.result && true;
               } else {
                 $screen.helpers.result = false;
               }
@@ -361,7 +336,7 @@ var vueWhatScreen = {
 
             case "<":
               if (index < indexCurrentScreen) {
-                $screen.helpers.result *= true;
+                $screen.helpers.result = $screen.helpers.result && true;
               } else {
                 $screen.helpers.result = false;
               }
@@ -370,7 +345,7 @@ var vueWhatScreen = {
 
             case "<=":
               if (index <= indexCurrentScreen) {
-                $screen.helpers.result *= true;
+                $screen.helpers.result = $screen.helpers.result && true;
               } else {
                 $screen.helpers.result = false;
               }
@@ -379,7 +354,7 @@ var vueWhatScreen = {
 
             case "=":
               if (index === indexCurrentScreen) {
-                $screen.helpers.result *= true;
+                $screen.helpers.result = $screen.helpers.result && true;
               } else {
                 $screen.helpers.result = false;
               }
@@ -408,7 +383,7 @@ var vueWhatScreen = {
 
     };
 
-    if ("breakpoints" in options && !("breakpointsPreset" in options)) {
+    if (options && options.breakpoints && !("breakpointsPreset" in options)) {
       if (validateBreakpoints(options.breakpoints, options.breakpointsLastName)) {
         // eslint-disable-next-line array-callback-return
         options.breakpoints.map(function (item) {
@@ -430,7 +405,7 @@ var vueWhatScreen = {
         $screen.helpers.breakpoints.isInitialised = true;
         $screen.helpers.setStateScreen();
       }
-    } else if ("breakpointsPreset" in options) {
+    } else if (options && options.breakpointsPreset) {
       if ("breakpoints" in options) {
         console.info("options.breakpoints will be ignored");
       }
@@ -477,7 +452,7 @@ var vueWhatScreen = {
         $screen.helpers.setStateScreen();
       }
     });
-    Vue.prototype.$screen = $screen;
+    vue.prototype.$screen = $screen;
   }
 };
 

@@ -3,14 +3,56 @@ import validateBreakpoints from "./func/validateBreakpoints"
 import checkIsH from "./func/checkIsH"
 import checkIsW from "./func/checkIsW"
 
-import breakpointsPreset from "./breackpointPreset/index"
+import breakpointsPreset from "./bp"
 
-const vueWhatScreen = {
-  /* jslint browser: true */
-  /* global window */
+import { PluginObject } from "vue"
 
-  install: (Vue, options) => {
-    const $screen = {
+import { Sign } from "src/enums/sign"
+
+export interface IBreakpoint {
+  name: string
+  value: number | [number, number]
+}
+export interface IOptions {
+  breakpoints?: IBreakpoint[]
+  breakpointsLastName?: string
+  breakpointsPreset?: string
+}
+
+export interface IScreen {
+  helpers: {
+    result: boolean
+    setStateIsL: () => void
+    breakpoints: {
+      isInitialised: boolean
+      arrNames: string[]
+      arrP: number[]
+      arrL: number[]
+    }
+    setStateScreen: () => void
+  }
+  methods: {
+    computeIsW: (sign: Sign, width: number) => boolean
+    computeIsH: (sign: Sign, height: number) => boolean
+  }
+  state: {
+    isL: undefined | boolean
+    screen: undefined | string
+  }
+  init: () => IScreen
+  isW: (sign: Sign, width: number) => IScreen
+  isH: (sign: Sign, height: number) => IScreen
+  isL: () => IScreen
+  isP: () => IScreen
+  isScreen: (screen: string) => IScreen
+  isScreenAd: (sign: Sign, screen: string) => IScreen
+  done: () => boolean
+  not: () => boolean
+}
+
+const vueWhatScreen: PluginObject<IOptions> = {
+  install: (vue, options) => {
+    const $screen: IScreen = {
       helpers: {
         result: true,
         setStateIsL: () => {
@@ -25,7 +67,7 @@ const vueWhatScreen = {
           arrL: []
         },
         setStateScreen: () => {
-          if ($screen.helpers.breakpoints.isInitialised) {
+          if (options && $screen.helpers.breakpoints.isInitialised) {
             let end = false
             let targetArr
 
@@ -81,19 +123,21 @@ const vueWhatScreen = {
         return $screen
       },
       isW: (sign, width) => {
-        $screen.helpers.result *= $screen.methods.computeIsW(sign, width)
+        $screen.helpers.result =
+          $screen.helpers.result && $screen.methods.computeIsW(sign, width)
         return $screen
       },
       isH: (sign, height) => {
-        $screen.helpers.result *= $screen.methods.computeIsH(sign, height)
+        $screen.helpers.result =
+          $screen.helpers.result && $screen.methods.computeIsH(sign, height)
         return $screen
       },
       isL: () => {
-        $screen.helpers.result *= $screen.state.isL
+        $screen.helpers.result = $screen.helpers.result && !!$screen.state.isL
         return $screen
       },
       isP: () => {
-        $screen.helpers.result *= !$screen.state.isL
+        $screen.helpers.result = $screen.helpers.result && !$screen.state.isL
         return $screen
       },
       isScreen: screen => {
@@ -101,7 +145,7 @@ const vueWhatScreen = {
           $screen.helpers.breakpoints.isInitialised &&
           $screen.state.screen === screen
         ) {
-          $screen.helpers.result *= true
+          $screen.helpers.result = $screen.helpers.result && true
         } else {
           $screen.helpers.result = false
         }
@@ -110,6 +154,7 @@ const vueWhatScreen = {
       isScreenAd: (sign, screen) => {
         if (
           $screen.helpers.breakpoints.isInitialised &&
+          typeof $screen.state.screen === "string" &&
           $screen.helpers.breakpoints.arrNames.includes(screen)
         ) {
           const index = $screen.helpers.breakpoints.arrNames.indexOf(screen)
@@ -120,35 +165,35 @@ const vueWhatScreen = {
           switch (sign) {
             case ">":
               if (index > indexCurrentScreen) {
-                $screen.helpers.result *= true
+                $screen.helpers.result = $screen.helpers.result && true
               } else {
                 $screen.helpers.result = false
               }
               break
             case ">=":
               if (index >= indexCurrentScreen) {
-                $screen.helpers.result *= true
+                $screen.helpers.result = $screen.helpers.result && true
               } else {
                 $screen.helpers.result = false
               }
               break
             case "<":
               if (index < indexCurrentScreen) {
-                $screen.helpers.result *= true
+                $screen.helpers.result = $screen.helpers.result && true
               } else {
                 $screen.helpers.result = false
               }
               break
             case "<=":
               if (index <= indexCurrentScreen) {
-                $screen.helpers.result *= true
+                $screen.helpers.result = $screen.helpers.result && true
               } else {
                 $screen.helpers.result = false
               }
               break
             case "=":
               if (index === indexCurrentScreen) {
-                $screen.helpers.result *= true
+                $screen.helpers.result = $screen.helpers.result && true
               } else {
                 $screen.helpers.result = false
               }
@@ -174,7 +219,7 @@ const vueWhatScreen = {
     }
 
     // Initialise breackpoints
-    if ("breakpoints" in options && !("breakpointsPreset" in options)) {
+    if (options && options.breakpoints && !("breakpointsPreset" in options)) {
       if (
         validateBreakpoints(options.breakpoints, options.breakpointsLastName)
       ) {
@@ -195,7 +240,7 @@ const vueWhatScreen = {
         $screen.helpers.breakpoints.isInitialised = true
         $screen.helpers.setStateScreen()
       }
-    } else if ("breakpointsPreset" in options) {
+    } else if (options && options.breakpointsPreset) {
       if ("breakpoints" in options) {
         console.info("options.breakpoints will be ignored")
       }
@@ -229,7 +274,7 @@ const vueWhatScreen = {
 
     $screen.helpers.setStateIsL() // Initialise orientation state
 
-    const listenResize = listenerFunction =>
+    const listenResize = (listenerFunction: () => void): void =>
       window.addEventListener("resize", listenerFunction)
 
     listenResize(() => {
@@ -239,7 +284,7 @@ const vueWhatScreen = {
       }
     })
 
-    Vue.prototype.$screen = $screen
+    vue.prototype.$screen = $screen
   }
 }
 

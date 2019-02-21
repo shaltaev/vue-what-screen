@@ -1,4 +1,6 @@
-export default {
+import { IResBp } from "src/bp"
+
+const F6: IResBp = {
   breakpoints: [
     {
       name: "small",
@@ -19,3 +21,5 @@ export default {
   ],
   breakpointsLastName: "xxlarge"
 }
+
+export default F6

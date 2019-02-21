@@ -1,24 +1,25 @@
-export default (sign, height) => {
+import { Sign } from "../enums/sign"
+
+export default (sign: Sign, width: number) => {
   /* jslint browser: true */
   /* global window */
-  if (Number.isInteger(height)) {
+  if (Number.isInteger(width)) {
     let query = ""
     switch (sign) {
       case ">":
-        query = `(min-height: ${height}px)`
+        query = `(min-width: ${width}px)`
         break
       case ">=":
-        query = `(min-height: ${height - 1}px)`
+        query = `(min-width: ${width - 1}px)`
         break
       case "<":
-        query = `(max-height: ${height}px)`
+        query = `(max-width: ${width}px)`
         break
       case "<=":
-        query = `(max-height: ${height + 1}px)`
+        query = `(max-width: ${width + 1}px)`
         break
       case "=":
-        query = `(max-height: ${height + 1}px) and (min-height: ${height -
-          1}px)`
+        query = `(max-width: ${width + 1}px) and (min-width: ${width - 1}px)`
         break
       default:
         break

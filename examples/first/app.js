@@ -2,9 +2,9 @@
 import "babel-polyfill"
 import Vue from "vue"
 import App from "./components/App.vue"
-import vueWhatScreen from "../../dist/bundle"
+import VueWhatScreen from "../../dist/bundle.esm"
 
-Vue.use(vueWhatScreen)
+Vue.use(VueWhatScreen)
 
 // eslint-disable-next-line no-new
 new Vue({

@@ -1,7 +1,9 @@
-export default (bp, bpLastName) => {
-  const arrP = []
-  const arrL = []
-  const arrNames = []
+import { IBreakpoint } from "src/main"
+
+export default (bp: IBreakpoint[], bpLastName?: string) => {
+  const arrP = [] as number[]
+  const arrL = [] as number[]
+  const arrNames = [] as string[]
   if (Array.isArray(bp) && bp.length > 0) {
     const validateAndPush = bp.map(item => {
       let result
@@ -36,7 +38,7 @@ export default (bp, bpLastName) => {
     // Check all true in validateAndPush
     // eslint-disable-next-line no-restricted-syntax
     for (const val in validateAndPush) {
-      if (validateAndPush[val] === false) {
+      if (!validateAndPush[val]) {
         return false
       }
     }
@@ -45,7 +47,8 @@ export default (bp, bpLastName) => {
     if (bpLastName !== undefined && typeof bpLastName === "string") {
       arrNames.push(bpLastName)
     }
-    const uniqNames = [...new Set(arrNames)]
+    // const uniqNames = [...new Set(arrNames)]
+    const uniqNames = Array.from(new Set(arrNames.map((item: string) => item)))
     if (uniqNames.length !== arrNames.length) return false
 
     // Check that arrP and arrL in ASC Order

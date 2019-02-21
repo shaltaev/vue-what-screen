@@ -1,4 +1,6 @@
-export default {
+import { IResBp } from "src/bp"
+
+const BS3: IResBp = {
   breakpoints: [
     {
       name: "xs",
@@ -15,3 +17,5 @@ export default {
   ],
   breakpointsLastName: "lg"
 }
+
+export default BS3
