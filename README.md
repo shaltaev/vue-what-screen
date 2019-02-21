@@ -1,6 +1,8 @@
 # Vue-what-screen
 
-The project is designed so that from any place of the application you can easily find out: **layout** of app and curent screent orientation _Portrait_ or _Landscape_.
+The project is designed so that from any place of the application you can easily find out: **layout** of app and current screen orientation _Portrait_ or _Landscape_.
+
+Also plugin provide system to work with breakpoints (and css media-query).
 
 ## Usage
 
@@ -51,8 +53,8 @@ Look more in directory **/examples**
 
 States:
 
-- `state.isL` (autoupdated on resize event) true if now your screen orientation is Lanscape
-- `state.screen` (autoupdated on resize event) available if you set breakpoints or choose one of breakpoints preset
+- `state.isL` (automated on resize event) true if now your screen orientation is Landscape
+- `state.screen` (automated on resize event) available if you set breakpoints or choose one of breakpoints preset
 
 Functions:
 
@@ -62,14 +64,14 @@ Functions:
   - `isP()` is orientation Portrait
   - `isScreen(screen)` is screen compare to breakpoint
 
-    - screen: string (one of breakpint name, like "xs" for Bootstrap preset)
-    - if breakpoints not seted result will be **false**
+    - screen: string (one of breakpoint name, like "xs" for Bootstrap preset)
+    - if breakpoints not set result will be **false**
 
-  - `isScreenAd(sign, screen)` is screen compare to breakpoint condition (Ad as advansed)
+  - `isScreenAd(sign, screen)` is screen compare to breakpoint condition (Ad as advanced)
 
     - sign: enum ( > , >= , < , <=, = )
-    - screen: string (one of breakpint name, like "xs" for Bootstrap preset)
-    - if sign not in enum or breakpoints not seted result will be **false**
+    - screen: string (one of breakpoint name, like "xs" for Bootstrap preset)
+    - if sign not in enum or breakpoints not set result will be **false**
     - ex: `isScreenAd('>', 'xs')` mean that screen should be more then `xs` from Bootstrap (only if you use Bootstrap preset)
 
   - `isW(sign, width)` is width(px)?
@@ -89,7 +91,7 @@ Functions:
     - `done()` return chain request result
     - `not()` return inverted result
 
-  - `init()` Deprecated. Now is unnessary.
+  - `init()` Deprecated. Now is unnecessary.
 
 BreakPoints:
 
@@ -102,7 +104,7 @@ var options = {
   breakpoints: [
     {
       name: "S", // Name should be uniq
-      // !IMPORANT You specify the upper limit in px, and this limit is in the range so (.., limit]
+      // !IMPORTANT You specify the upper limit in px, and this limit is in the range so (.., limit]
       // The lower limit is derived from the previous breakpoint or 0
       value: [600, 800] // first for Portrait, second for Landscape
     },
@@ -115,10 +117,10 @@ var options = {
       value: 1800 // if Portrait the same Landscape
     }
   ],
-  breakpointsLastName: "uH", // if not seted then name will be `u_${brackpoints[last].name}` like u_H
+  breakpointsLastName: "uH", // if not set then name will be `u_${breakpoints[last].name}` like u_H
 
   /**
-   * If you add next, then options.breakpoints and options.reakpointsLastName will be ignored
+   * If you add next, then options.breakpoints and options.breakpointsLastName will be ignored
    */
   breakpointsPreset: "BS"
 }
@@ -126,7 +128,7 @@ var options = {
 Vue.use(vueScreen, options)
 ```
 
-| presets      | alias for always    | alias as for lastest pakage |
+| presets      | alias for always    | alias as for latest package |
 | ------------ | ------------------- | --------------------------- |
 | Bootstrap 4  | "BS4", "Bootstrap4" | "BS", "Bootstrap"           |
 | Bootstrap 3  | "BS3", "Bootstrap3" |                             |
@@ -136,7 +138,7 @@ Vue.use(vueScreen, options)
 
 - [x] `v-if` on mounted hooks
 - [x] optimise `window.addEventListener("resize", () => {})`
-- [ ] deside: what to use `window.addEventListener` or `Media Query List Subscriptions`?
+- [ ] decide: what to use `window.addEventListener` or `Media Query List Subscriptions`?
 - [ ] create an easy way to subscribe Vue-component to status updates
 
 ## Versioning
