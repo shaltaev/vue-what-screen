@@ -24,9 +24,8 @@ yarn add vue-what-screen
   - [x] Chain-style request
   - [x] Breakpoints
   - [x] Presets for Breakpoints
-  - [x] TypeScript support (since 0.1.8)
+  - [x] TypeScript support (since 0.1.8) [more about](#TSSupportMore)
 - IN 0.2
-  - [ ] Code Generator for queries (soon)
   - [ ] easy subscription on $screen.state for Vue-component
 
 ### Example from init to done
@@ -46,6 +45,14 @@ In vue component:
 ```xml
 <template>
   <h3 v-if="$screen.isP().done()">Your screen orientation is Portrait</h3>
+</template>
+```
+
+or like that:
+
+```xml
+<template>
+  <h3 :class=" { 'class-for-landscape': $screen.isL().done() , 'class-for-portrait': $screen.isP().done() }">Your screen orientation is Portrait</h3>
 </template>
 ```
 
@@ -138,12 +145,26 @@ Vue.use(vueScreen, options)
 | Bootstrap 3  | "BS3", "Bootstrap3" |                             |
 | Foundation 6 | "F6", "Foundation6" | "F", "Foundation"           |
 
+## TypeScript support
+<span id="TSSupportMore" />
+In your app you need to add shim file with contain:
+
+```ts
+// shims-vueScreen.d.ts
+import Vue from "vue"
+
+import { IScreen } from "vue-what-screen/dist/types"
+
+declare module "vue/types/vue" {
+  interface Vue {
+    $screen: IScreen
+  }
+}
+```
+
 ## ToDo's
 
-- [x] `v-if` on mounted hooks
-- [x] optimise `window.addEventListener("resize", () => {})`
 - [ ] decide: what to use `window.addEventListener` or `Media Query List Subscriptions`?
-- [ ] create an easy way to subscribe Vue-component to status updates
 
 ## Versioning
 
