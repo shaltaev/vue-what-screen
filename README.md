@@ -146,6 +146,7 @@ Vue.use(vueScreen, options)
 | Foundation 6 | "F6", "Foundation6" | "F", "Foundation"           |
 
 ## TypeScript support
+
 <span id="TSSupportMore" />
 In your app you need to add shim file with contain:
 

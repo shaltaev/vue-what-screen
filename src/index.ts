@@ -295,3 +295,5 @@ const vueWhatScreen: PluginObject<IOptions> = {
 }
 
 export default vueWhatScreen
+
+export { vueWhatScreen }
