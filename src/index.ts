@@ -1,25 +1,90 @@
-import validateBreakpoints from "./func/validateBreakpoints"
+// import validateBreakpoints from "./func/validateBreakpoints"
 
 import checkIsH from "./func/checkIsH"
 import checkIsW from "./func/checkIsW"
 
-import breakpointsPreset from "./bp"
+import { bpGetSet } from "./bp"
 
 import { PluginObject } from "vue"
 
-import { Sign } from "./enums/sign"
+import { Sign } from "./enums-as-type/sign"
 
-export interface IBreakpoint {
+import { XOR, ArrayOneOrMore } from "./enums-as-type/type-helper"
+
+type BpAsObject = {
   name: string
   value: number | [number, number]
 }
-export interface IOptions {
-  breakpoints?: IBreakpoint[]
-  breakpointsLastName?: string
-  breakpointsPreset?: string
+
+type BpAsArray = { 0: BpAsObject["name"]; 1: BpAsObject["value"] }
+
+type Bp = XOR<BpAsObject, BpAsArray>
+
+const parseBP = (bp: Bp): BpAsArray => {
+  if (bp.name) {
+    return [bp.name, bp.value]
+  }
+  if (bp[0]) {
+    return bp
+  }
+  // assertNever(bp)
+  return ["never", 0]
 }
 
-interface IHelpers {
+const setBp = (bp: BpSetAsArray, target: BpHelpers): void => {
+  const bpOs = bp[0]
+
+  bpOs.map(item => {
+    const itemAsArr = parseBP(item)
+    if (Array.isArray(itemAsArr[1])) {
+      target.breakpoints.arrP.push(itemAsArr[1][0])
+      target.breakpoints.arrL.push(itemAsArr[1][1])
+    } else {
+      target.breakpoints.arrP.push(itemAsArr[1])
+      target.breakpoints.arrL.push(itemAsArr[1])
+    }
+    target.breakpoints.arrNames.push(itemAsArr[0])
+  })
+
+  if (typeof bp[1] !== "undefined") {
+    target.breakpoints.arrNames.push(bp[1])
+  } else {
+    target.breakpoints.arrNames.push(
+      `u_${target.breakpoints.arrNames[target.breakpoints.arrNames.length - 1]}`
+    )
+  }
+
+  target.breakpoints.isInitialized = true
+}
+
+type BpSetAsObjectManual = {
+  breakpoints: ArrayOneOrMore<Bp>
+  breakpointsLastName?: string
+}
+
+type BpAsObjectPreset = {
+  breakpointsPreset: string
+}
+
+type BpOptionsAsObject = XOR<BpSetAsObjectManual, BpAsObjectPreset>
+
+export type BpSetAsArray = {
+  0: BpSetAsObjectManual["breakpoints"]
+  1?: BpSetAsObjectManual["breakpointsLastName"]
+}
+
+type BpAsPreset = BpAsObjectPreset["breakpointsPreset"]
+
+export type BpOptions = BpAsPreset | XOR<BpOptionsAsObject, BpSetAsArray>
+
+export type VueWhatScreenPluginOptions = XOR<
+  {
+    bp: BpOptions
+  },
+  BpOptionsAsObject
+>
+
+type BpHelpers = {
   result: boolean
 
   breakpoints: {
@@ -30,11 +95,12 @@ interface IHelpers {
   }
 }
 
-interface IHelperFunctions {
-  setStateIsL: ($screen: IScreen) => void
-  setStateScreen: ($screen: IScreen, options: IOptions) => void
+type HelperFunctions = {
+  setStateIsL: ($screen: Screen) => void
+  setStateScreen: ($screen: Screen, options: VueWhatScreenPluginOptions) => void
 }
-export interface IScreen {
+
+export type Screen = {
   methods: {
     computeIsW: (sign: Sign, width: number) => boolean
     computeIsH: (sign: Sign, height: number) => boolean
@@ -42,19 +108,22 @@ export interface IScreen {
   state: {
     isL: undefined | boolean
     screen: undefined | string
+    // helpers: BpHelpers
   }
-  init: () => IScreen
-  isW: (sign: Sign, width: number) => IScreen
-  isH: (sign: Sign, height: number) => IScreen
-  isL: () => IScreen
-  isP: () => IScreen
-  isScreen: (screen: string) => IScreen
-  isScreenAd: (sign: Sign, screen: string) => IScreen
+  init: () => Screen
+  isW: (sign: Sign, width: number) => Screen
+  isH: (sign: Sign, height: number) => Screen
+  isL: () => Screen
+  isP: () => Screen
+  isScreen: (screen: string) => Screen
+  isScreenAd: (sign: Sign, screen: string) => Screen
   done: () => boolean
   not: () => boolean
 }
 
-const helpers: IHelpers = {
+export type IScreen = Screen // Added for backward compatibility
+
+const helpers: BpHelpers = {
   result: true,
 
   breakpoints: {
@@ -65,7 +134,7 @@ const helpers: IHelpers = {
   }
 }
 
-const helperFunctions: IHelperFunctions = {
+const helperFunctions: HelperFunctions = {
   setStateIsL: $screen => {
     $screen.state.isL = window.matchMedia("(orientation: landscape)").matches
   },
@@ -108,9 +177,9 @@ const helperFunctions: IHelperFunctions = {
   }
 }
 
-const vueWhatScreen: PluginObject<IOptions> = {
+const vueWhatScreen: PluginObject<VueWhatScreenPluginOptions> = {
   install: (vue, options) => {
-    const $screen: IScreen = {
+    const $screen: Screen = {
       methods: {
         computeIsW: (sign, width) => {
           return checkIsW(sign, width)
@@ -122,9 +191,10 @@ const vueWhatScreen: PluginObject<IOptions> = {
       state: {
         isL: undefined,
         screen: undefined
+        //   helpers
       },
       init: () => {
-        console.log("Now `init()` is unnecessary")
+        // console.log("Now `init()` is unnecessary")
         helpers.result = true
         return $screen
       },
@@ -225,60 +295,55 @@ const vueWhatScreen: PluginObject<IOptions> = {
     }
 
     // Initializing breakpoints
-    if (options && options.breakpoints && !("breakpointsPreset" in options)) {
-      if (
-        validateBreakpoints(options.breakpoints, options.breakpointsLastName)
-      ) {
-        // eslint-disable-next-line array-callback-return
-        options.breakpoints.map(item => {
-          helpers.breakpoints.arrNames.push(item.name)
-          if (typeof item.value === "number") {
-            helpers.breakpoints.arrP.push(item.value)
-            helpers.breakpoints.arrL.push(item.value)
-          } else {
-            helpers.breakpoints.arrP.push(item.value[0])
-            helpers.breakpoints.arrL.push(item.value[1])
-          }
-        })
-        if (options.breakpointsLastName !== undefined) {
-          helpers.breakpoints.arrNames.push(options.breakpointsLastName)
-        }
-        helpers.breakpoints.isInitialized = true
-        helperFunctions.setStateScreen($screen, options)
-      }
-    } else if (options && options.breakpointsPreset) {
-      if ("breakpoints" in options) {
-        console.info("options.breakpoints will be ignored")
-      }
-      if ("breakpointsLastName" in options) {
-        console.info("options.breakpointsLastName will be ignored")
-      }
-      const preset = breakpointsPreset(options.breakpointsPreset)
-      if (preset !== false) {
-        // eslint-disable-next-line array-callback-return
-        preset.breakpoints.map(item => {
-          helpers.breakpoints.arrNames.push(item.name)
-          if (typeof item.value === "number") {
-            helpers.breakpoints.arrP.push(item.value)
-            helpers.breakpoints.arrL.push(item.value)
-          } else {
-            helpers.breakpoints.arrP.push(item.value[0])
-            helpers.breakpoints.arrL.push(item.value[1])
-          }
-        })
 
-        helpers.breakpoints.arrNames.push(preset.breakpointsLastName)
-
-        helpers.breakpoints.isInitialized = true
-        helperFunctions.setStateScreen($screen, options)
+    if (options) {
+      let preBp: BpOptions | undefined
+      if (options.bp) {
+        preBp = options.bp
+      } else if (options.breakpoints) {
+        preBp = [options.breakpoints, options.breakpointsLastName]
+      } else if (options.breakpointsPreset) {
+        preBp = options.breakpointsPreset
       } else {
-        console.error("Initializing of BP :: Failed")
+        preBp = undefined
       }
-    } else {
-      console.error("Initializing of BP :: Failed")
+
+      // as preset
+      if (typeof preBp !== "undefined") {
+        if (typeof preBp === "string") {
+          const bpSet = bpGetSet(preBp)
+          if (bpSet !== false) {
+            setBp(bpSet, helpers)
+          }
+        } else if (preBp.breakpointsPreset !== undefined) {
+          const bpSet = bpGetSet(preBp.breakpointsPreset)
+          if (bpSet !== false) {
+            setBp(bpSet, helpers)
+          }
+        }
+        // as set
+        else {
+          let bpLastName: string | undefined
+          // get bpLastName
+          if (preBp[1]) {
+            bpLastName = preBp[1]
+          } else if (preBp.breakpointsLastName) {
+            bpLastName = preBp.breakpointsLastName
+          }
+          // get bp
+          if (preBp[0]) {
+            setBp([preBp[0], bpLastName], helpers)
+          } else if (preBp.breakpoints) {
+            setBp([preBp.breakpoints, bpLastName], helpers)
+          }
+        }
+      }
     }
 
     helperFunctions.setStateIsL($screen) // Initializing orientation state
+    if (options && helpers.breakpoints.isInitialized) {
+      helperFunctions.setStateScreen($screen, options)
+    }
 
     const listenResize = (listenerFunction: () => void): void =>
       window.addEventListener("resize", listenerFunction)

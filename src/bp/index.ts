@@ -2,14 +2,9 @@ import BS3 from "./Bootstrap3"
 import BS4 from "./Bootstrap4"
 import F6 from "./Foundation6"
 
-import { IOptions, IBreakpoint } from "../."
+type BpSetAsArray = import("../.").BpSetAsArray
 
-export interface IResBp extends IOptions {
-  breakpoints: IBreakpoint[]
-  breakpointsLastName: string
-}
-
-export default (presetName: string): IResBp | false => {
+const bpGetSet = (presetName: string): BpSetAsArray | false => {
   switch (presetName) {
     case "Bootstrap3":
     case "BS3":
@@ -31,3 +26,7 @@ export default (presetName: string): IResBp | false => {
       return false
   }
 }
+
+export default bpGetSet
+
+export { bpGetSet }

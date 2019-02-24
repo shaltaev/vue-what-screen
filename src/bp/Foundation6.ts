@@ -1,25 +1,6 @@
-import { IResBp } from "."
-
-const F6: IResBp = {
-  breakpoints: [
-    {
-      name: "small",
-      value: 640
-    },
-    {
-      name: "medium",
-      value: 1024
-    },
-    {
-      name: "large",
-      value: 1200
-    },
-    {
-      name: "xlarge",
-      value: 1440
-    }
-  ],
-  breakpointsLastName: "xxlarge"
-}
+const F6: import("../.").BpSetAsArray = [
+  [["small", 640], ["medium", 1024], ["large", 1200], ["xlarge", 1440]],
+  "xxlarge"
+]
 
 export default F6

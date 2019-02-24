@@ -1,211 +1,82 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.vueWhatScreen = factory());
-}(this, function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = global || self, factory(global.vueWhatScreen = {}));
+}(this, function (exports) { 'use strict';
 
-  function _typeof(obj) {
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
-  }
-
-  var validateBreakpoints = (function (bp, bpLastName) {
-    var arrP = [];
-    var arrL = [];
-    var arrNames = [];
-
-    if (Array.isArray(bp) && bp.length > 0) {
-      var validateAndPush = bp.map(function (item) {
-        var result; // Check that item has right structure
-
-        if (_typeof(item) === "object" && "name" in item && "value" in item && typeof item.name === "string" && (typeof item.value === "number" || Array.isArray(item.value) && item.value.length === 2 && typeof item.value[0] === "number" && typeof item.value[1] === "number")) {
-          arrNames.push(item.name);
-
-          if (typeof item.value === "number") {
-            arrP.push(item.value);
-            arrL.push(item.value);
-          } else {
-            arrP.push(item.value[0]);
-            arrL.push(item.value[1]);
-          }
-
-          result = true;
-        } else {
-          result = false;
-        }
-
-        return result;
-      }); // Check all true in validateAndPush
-      // eslint-disable-next-line no-restricted-syntax
-
-      for (var val in validateAndPush) {
-        if (!validateAndPush[val]) {
-          return false;
-        }
-      } // Check that all names in arrNames is uniq
-
-
-      if (bpLastName !== undefined && typeof bpLastName === "string") {
-        arrNames.push(bpLastName);
-      } // const uniqNames = [...new Set(arrNames)]
-
-
-      var uniqNames = Array.from(new Set(arrNames.map(function (item) {
-        return item;
-      })));
-      if (uniqNames.length !== arrNames.length) return false; // Check that arrP and arrL in ASC Order
-
-      for (var i = 1; i < arrP.length; i += 1) {
-        if (arrL[i - 1] > arrL[i]) {
-          return false;
-        }
-
-        if (arrP[i - 1] > arrP[i]) {
-          return false;
-        }
-
-        return true;
-      }
-    }
-
-    return false;
-  });
-
+  // import { assertNever } from "../enums-as-type/type-helper"
   var checkIsH = (function (sign, height) {
-    if (Number.isInteger(height)) {
-      var query = "";
+    var query = "";
 
-      switch (sign) {
-        case ">":
-          query = "(min-height: ".concat(height, "px)");
-          break;
+    switch (sign) {
+      case ">":
+        query = "(min-height: ".concat(height, "px)");
+        break;
 
-        case ">=":
-          query = "(min-height: ".concat(height - 1, "px)");
-          break;
+      case ">=":
+        query = "(min-height: ".concat(height - 1, "px)");
+        break;
 
-        case "<":
-          query = "(max-height: ".concat(height, "px)");
-          break;
+      case "<":
+        query = "(max-height: ".concat(height, "px)");
+        break;
 
-        case "<=":
-          query = "(max-height: ".concat(height + 1, "px)");
-          break;
+      case "<=":
+        query = "(max-height: ".concat(height + 1, "px)");
+        break;
 
-        case "=":
-          query = "(max-height: ".concat(height + 1, "px) and (min-height: ").concat(height - 1, "px)");
-          break;
+      case "=":
+        query = "(max-height: ".concat(height + 1, "px) and (min-height: ").concat(height - 1, "px)");
+        break;
 
-        default:
-          break;
-      }
-
-      if (query !== "") {
-        return window.matchMedia(query).matches;
-      }
+      default:
+        // assertNever(sign)
+        break;
     }
 
-    return false;
+    return window.matchMedia(query).matches;
   });
 
+  // import { assertNever } from "../enums-as-type/type-helper"
   var checkIsW = (function (sign, width) {
-    /* jslint browser: true */
+    var query = "";
 
-    /* global window */
-    if (Number.isInteger(width)) {
-      var query = "";
+    switch (sign) {
+      case ">":
+        query = "(min-width: ".concat(width, "px)");
+        break;
 
-      switch (sign) {
-        case ">":
-          query = "(min-width: ".concat(width, "px)");
-          break;
+      case ">=":
+        query = "(min-width: ".concat(width - 1, "px)");
+        break;
 
-        case ">=":
-          query = "(min-width: ".concat(width - 1, "px)");
-          break;
+      case "<":
+        query = "(max-width: ".concat(width, "px)");
+        break;
 
-        case "<":
-          query = "(max-width: ".concat(width, "px)");
-          break;
+      case "<=":
+        query = "(max-width: ".concat(width + 1, "px)");
+        break;
 
-        case "<=":
-          query = "(max-width: ".concat(width + 1, "px)");
-          break;
+      case "=":
+        query = "(max-width: ".concat(width + 1, "px) and (min-width: ").concat(width - 1, "px)");
+        break;
 
-        case "=":
-          query = "(max-width: ".concat(width + 1, "px) and (min-width: ").concat(width - 1, "px)");
-          break;
-
-        default:
-          break;
-      }
-
-      if (query !== "") {
-        return window.matchMedia(query).matches;
-      }
+      default:
+        // assertNever(sign)
+        break;
     }
 
-    return false;
+    return window.matchMedia(query).matches;
   });
 
-  var BS3 = {
-    breakpoints: [{
-      name: "xs",
-      value: 768 - 1
-    }, {
-      name: "sm",
-      value: 992
-    }, {
-      name: "md",
-      value: 1200
-    }],
-    breakpointsLastName: "lg"
-  };
+  var BS3 = [[["xs", 768 - 1], ["sm", 992], ["md", 1200]], "lg"];
 
-  var BS4 = {
-    breakpoints: [{
-      name: "xs",
-      value: 576
-    }, {
-      name: "sm",
-      value: 768
-    }, {
-      name: "md",
-      value: 992
-    }, {
-      name: "lg",
-      value: 1200
-    }],
-    breakpointsLastName: "xl"
-  };
+  var BS4 = [[["xs", 576], ["sm", 768], ["md", 992], ["lg", 1200]], "xl"];
 
-  var F6 = {
-    breakpoints: [{
-      name: "small",
-      value: 640
-    }, {
-      name: "medium",
-      value: 1024
-    }, {
-      name: "large",
-      value: 1200
-    }, {
-      name: "xlarge",
-      value: 1440
-    }],
-    breakpointsLastName: "xxlarge"
-  };
+  var F6 = [[["small", 640], ["medium", 1024], ["large", 1200], ["xlarge", 1440]], "xxlarge"];
 
-  var breakpointsPreset = (function (presetName) {
+  var bpGetSet = function bpGetSet(presetName) {
     switch (presetName) {
       case "Bootstrap3":
       case "BS3":
@@ -226,8 +97,49 @@
       default:
         return false;
     }
-  });
+  };
 
+  // import validateBreakpoints from "./func/validateBreakpoints"
+
+  var parseBP = function parseBP(bp) {
+    if (bp.name) {
+      return [bp.name, bp.value];
+    }
+
+    if (bp[0]) {
+      return bp;
+    } // assertNever(bp)
+
+
+    return ["never", 0];
+  };
+
+  var setBp = function setBp(bp, target) {
+    var bpOs = bp[0];
+    bpOs.map(function (item) {
+      var itemAsArr = parseBP(item);
+
+      if (Array.isArray(itemAsArr[1])) {
+        target.breakpoints.arrP.push(itemAsArr[1][0]);
+        target.breakpoints.arrL.push(itemAsArr[1][1]);
+      } else {
+        target.breakpoints.arrP.push(itemAsArr[1]);
+        target.breakpoints.arrL.push(itemAsArr[1]);
+      }
+
+      target.breakpoints.arrNames.push(itemAsArr[0]);
+    });
+
+    if (typeof bp[1] !== "undefined") {
+      target.breakpoints.arrNames.push(bp[1]);
+    } else {
+      target.breakpoints.arrNames.push("u_".concat(target.breakpoints.arrNames[target.breakpoints.arrNames.length - 1]));
+    }
+
+    target.breakpoints.isInitialized = true;
+  };
+
+  // Added for backward compatibility
   var helpers = {
     result: true,
     breakpoints: {
@@ -286,10 +198,11 @@
         },
         state: {
           isL: undefined,
-          screen: undefined
+          screen: undefined //   helpers
+
         },
         init: function init() {
-          console.log("Now `init()` is unnecessary");
+          // console.log("Now `init()` is unnecessary")
           helpers.result = true;
           return $screen;
         },
@@ -391,63 +304,58 @@
 
       };
 
-      if (options && options.breakpoints && !("breakpointsPreset" in options)) {
-        if (validateBreakpoints(options.breakpoints, options.breakpointsLastName)) {
-          // eslint-disable-next-line array-callback-return
-          options.breakpoints.map(function (item) {
-            helpers.breakpoints.arrNames.push(item.name);
+      if (options) {
+        var preBp;
 
-            if (typeof item.value === "number") {
-              helpers.breakpoints.arrP.push(item.value);
-              helpers.breakpoints.arrL.push(item.value);
-            } else {
-              helpers.breakpoints.arrP.push(item.value[0]);
-              helpers.breakpoints.arrL.push(item.value[1]);
-            }
-          });
-
-          if (options.breakpointsLastName !== undefined) {
-            helpers.breakpoints.arrNames.push(options.breakpointsLastName);
-          }
-
-          helpers.breakpoints.isInitialized = true;
-          helperFunctions.setStateScreen($screen, options);
-        }
-      } else if (options && options.breakpointsPreset) {
-        if ("breakpoints" in options) {
-          console.info("options.breakpoints will be ignored");
-        }
-
-        if ("breakpointsLastName" in options) {
-          console.info("options.breakpointsLastName will be ignored");
-        }
-
-        var preset = breakpointsPreset(options.breakpointsPreset);
-
-        if (preset !== false) {
-          // eslint-disable-next-line array-callback-return
-          preset.breakpoints.map(function (item) {
-            helpers.breakpoints.arrNames.push(item.name);
-
-            if (typeof item.value === "number") {
-              helpers.breakpoints.arrP.push(item.value);
-              helpers.breakpoints.arrL.push(item.value);
-            } else {
-              helpers.breakpoints.arrP.push(item.value[0]);
-              helpers.breakpoints.arrL.push(item.value[1]);
-            }
-          });
-          helpers.breakpoints.arrNames.push(preset.breakpointsLastName);
-          helpers.breakpoints.isInitialized = true;
-          helperFunctions.setStateScreen($screen, options);
+        if (options.bp) {
+          preBp = options.bp;
+        } else if (options.breakpoints) {
+          preBp = [options.breakpoints, options.breakpointsLastName];
+        } else if (options.breakpointsPreset) {
+          preBp = options.breakpointsPreset;
         } else {
-          console.error("Initializing of BP :: Failed");
+          preBp = undefined;
+        } // as preset
+
+
+        if (typeof preBp !== "undefined") {
+          if (typeof preBp === "string") {
+            var bpSet = bpGetSet(preBp);
+
+            if (bpSet !== false) {
+              setBp(bpSet, helpers);
+            }
+          } else if (preBp.breakpointsPreset !== undefined) {
+            var _bpSet = bpGetSet(preBp.breakpointsPreset);
+
+            if (_bpSet !== false) {
+              setBp(_bpSet, helpers);
+            }
+          } // as set
+          else {
+              var bpLastName; // get bpLastName
+
+              if (preBp[1]) {
+                bpLastName = preBp[1];
+              } else if (preBp.breakpointsLastName) {
+                bpLastName = preBp.breakpointsLastName;
+              } // get bp
+
+
+              if (preBp[0]) {
+                setBp([preBp[0], bpLastName], helpers);
+              } else if (preBp.breakpoints) {
+                setBp([preBp.breakpoints, bpLastName], helpers);
+              }
+            }
         }
-      } else {
-        console.error("Initializing of BP :: Failed");
       }
 
       helperFunctions.setStateIsL($screen); // Initializing orientation state
+
+      if (options && helpers.breakpoints.isInitialized) {
+        helperFunctions.setStateScreen($screen, options);
+      }
 
       var listenResize = function listenResize(listenerFunction) {
         return window.addEventListener("resize", listenerFunction);
@@ -464,6 +372,9 @@
     }
   };
 
-  return vueWhatScreen;
+  exports.default = vueWhatScreen;
+  exports.vueWhatScreen = vueWhatScreen;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));

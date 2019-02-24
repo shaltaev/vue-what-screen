@@ -106,7 +106,61 @@ Functions:
 
 BreakPoints:
 
-In main:
+| presets      | alias for always    | alias as for latest package |
+| ------------ | ------------------- | --------------------------- |
+| Bootstrap 4  | "BS4", "Bootstrap4" | "BS", "Bootstrap"           |
+| Bootstrap 3  | "BS3", "Bootstrap3" |                             |
+| Foundation 6 | "F6", "Foundation6" | "F", "Foundation"           |
+
+In main NEW STYLE (will be saved in 1.0.0)
+
+```js
+// Valid BpOptions
+
+bp0 = "PresetName"
+bp1 = { breakpointsPreset: "PresetName" }
+
+bp2 = { // bp set as object
+  breakpoints: [   //  [ []|{} ] length 1 or more
+    // Name should be uniq
+    // !IMPORTANT You specify the upper limit in px, and this limit is in the range so (.., limit]
+    // The lower limit is derived from the previous breakpoint or 0
+    { // breakpoint as object
+      name: "bp0",
+      value: 200  // if Portrait the same Landscape
+    },
+    [ "bp1", [400, 450] ], // breakpoint as array
+  ],
+  breakpointsLastName: "lastBpName" //  if not set then name will be `u_${breakpoints[last].name}` like u_H
+}
+
+bp3 = [ // bp set as array
+ [   //  [ []|{} ] length 1 or more
+    // Name should be uniq
+    // !IMPORTANT You specify the upper limit in px, and this limit is in the range so (.., limit]
+    // The lower limit is derived from the previous breakpoint or 0
+    { // breakpoint as object
+      name: "bp0",
+      value: 200  // if Portrait the same Landscape
+    },
+    [ "bp1", [400, 450] ], // breakpoint as array
+  ],,
+ "lastBpName"
+]
+```
+
+```js
+var vueScreen = require("vue-what-screen")
+
+var options = {
+  // one of BpOption look up ^
+  // bp:
+}
+
+Vue.use(vueScreen, options)
+```
+
+In main OLD STYLE (deprecated and will be removed in 1.0.0)
 
 ```js
 var vueScreen = require("vue-what-screen")
@@ -138,12 +192,6 @@ var options = {
 
 Vue.use(vueScreen, options)
 ```
-
-| presets      | alias for always    | alias as for latest package |
-| ------------ | ------------------- | --------------------------- |
-| Bootstrap 4  | "BS4", "Bootstrap4" | "BS", "Bootstrap"           |
-| Bootstrap 3  | "BS3", "Bootstrap3" |                             |
-| Foundation 6 | "F6", "Foundation6" | "F", "Foundation"           |
 
 ## TypeScript support
 
