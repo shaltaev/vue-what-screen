@@ -5,11 +5,11 @@ import checkIsW from "./func/checkIsW"
 
 import { bpGetSet } from "./bp"
 
-import { PluginObject } from "vue"
+type XOR<T, U> = import("./enums-as-type/type-helper").XOR<T, U>
 
-import { Sign } from "./enums-as-type/sign"
+type ArrayOneOrMore<T> = import("./enums-as-type/type-helper").ArrayOneOrMore<T>
 
-import { XOR, ArrayOneOrMore } from "./enums-as-type/type-helper"
+type Sign = import("./enums-as-type/sign").Sign
 
 type BpAsObject = {
   name: string
@@ -177,7 +177,7 @@ const helperFunctions: HelperFunctions = {
   }
 }
 
-const vueWhatScreen: PluginObject<VueWhatScreenPluginOptions> = {
+const vueWhatScreen: import("vue").PluginObject<VueWhatScreenPluginOptions> = {
   install: (vue, options) => {
     const $screen: Screen = {
       methods: {
