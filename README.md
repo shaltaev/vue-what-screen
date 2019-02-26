@@ -24,7 +24,7 @@ yarn add vue-what-screen
   - [x] Chain-style request
   - [x] Breakpoints
   - [x] Presets for Breakpoints
-  - [x] TypeScript support (since 0.1.8) [more about](#TSSupportMore)
+  - [x] TypeScript support (since 0.1.8) [more about](#typescript-support)
 - IN 0.2
   - [ ] easy subscription on $screen.state for Vue-component
 
@@ -195,7 +195,6 @@ Vue.use(vueScreen, options)
 
 ## TypeScript support
 
-<span id="TSSupportMore" />
 In your app you need to add shim file with contain:
 
 ```ts
