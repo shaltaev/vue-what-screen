@@ -25,8 +25,7 @@ yarn add vue-what-screen
   - [x] Breakpoints
   - [x] Presets for Breakpoints
   - [x] TypeScript support (since 0.1.8) [more about](#typescript-support)
-- IN 0.2
-  - [ ] easy subscription on $screen.state for Vue-component
+  - [x] subscription on $screen.state for Vue-component look /examples/subscription/src/components/App
 
 ### Example from init to done
 
